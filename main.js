@@ -88,6 +88,6 @@ const handleSubmit = () => {
 GetLocal ? table.hidden = false || showTable() : 0;
 
 document.getElementById('form').addEventListener('submit', e => {
-  e.preventDefault();
+  // e.preventDefault();
   handleSubmit();
 })
