@@ -2,9 +2,7 @@ const form = document.forms['studentForm'];
 const table = document.getElementById('table');
 
 const setLocal = e => localStorage.setItem('student', JSON.stringify(e));
-const GetLocal = JSON.parse(localStorage.getItem('student'));
-
-const handleCheckDuplicate = (value) => new Set(value).size !== value.length;
+// const handleCheckDuplicate = (value) => new Set(value).size !== value.length;
 
 const variableData = (data) => {
   if (data.msv == 0) {
@@ -31,16 +29,11 @@ const variableData = (data) => {
       title: 'Phone error...',
       text: 'Bạn chưa nhập số điện thoại!',
     })
-  } else if (handleCheckDuplicate(data.msv) == true) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Oops...',
-      text: 'Mã sinh viên đã tồn tại!',
-    })
   } else return 1;
 }
 
-let datas = [];
+let datas = window.localStorage.getItem('student') ? JSON.parse(localStorage.getItem('student')) : [];
+
 const formData = () => {
   const student = {
     msv: form.msv.value,
@@ -53,12 +46,12 @@ const formData = () => {
     datas.push(student)
     setLocal(datas);
   }
-  // console.log(datas)
-  // console.log(GetLocal)
   return datas;
 }
 
+
 const showTable = () => {
+  const GetLocal = JSON.parse(localStorage.getItem('student'));
   let html = '';
   GetLocal.forEach(e => {
     html += `<tr>
@@ -73,21 +66,20 @@ const showTable = () => {
 }
 
 const handleSubmit = () => {
-  if (GetLocal !== null) {
     Swal.fire({
       title: 'Successful!!',
       text: 'Dữ liệu đã được thêm vào danh sách!',
       icon: 'success',
     })
     table.hidden = false;
-  }
+  
   formData();
   showTable();
 }
 
-GetLocal ? table.hidden = false || showTable() : 0;
+window.localStorage.getItem('student') ?  table.hidden = true && showTable() : 0;
 
 document.getElementById('form').addEventListener('submit', e => {
-  // e.preventDefault();
+  e.preventDefault();
   handleSubmit();
 })
