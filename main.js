@@ -2,7 +2,6 @@ const form = document.forms['studentForm'];
 const table = document.getElementById('table');
 
 const setLocal = e => localStorage.setItem('student', JSON.stringify(e));
-// const handleCheckDuplicate = (value) => new Set(value).size !== value.length;
 
 const variableData = (data) => {
   if (data.msv == 0) {
@@ -32,7 +31,8 @@ const variableData = (data) => {
   } else return 1;
 }
 
-let datas = window.localStorage.getItem('student') ? JSON.parse(localStorage.getItem('student')) : [];
+let datas = JSON.parse(localStorage.getItem('student')) || [];
+let unique = [...new Set(datas.map(e => e.msv))];
 
 const formData = () => {
   const student = {
@@ -42,17 +42,16 @@ const formData = () => {
     sex: form.sex.value,
     phone: form.phone.value,
   }
-  if(variableData(student)) {
-    datas.push(student)
-    setLocal(datas);
-  }
-  return datas;
+  
+  datas.push(student);
+  setLocal(datas);
+  // return datas;
 }
-
 
 const showTable = () => {
   const GetLocal = JSON.parse(localStorage.getItem('student'));
   let html = '';
+  GetLocal ? table.hidden = false : 0;
   GetLocal.forEach(e => {
     html += `<tr>
       <td>${e.msv}</td>
@@ -66,13 +65,6 @@ const showTable = () => {
 }
 
 const handleSubmit = () => {
-    Swal.fire({
-      title: 'Successful!!',
-      text: 'Dữ liệu đã được thêm vào danh sách!',
-      icon: 'success',
-    })
-    table.hidden = false;
-  
   formData();
   showTable();
 }
